@@ -1,0 +1,41 @@
+/*Bootstrap already does this
+* {
+  box-sizing: border-box;
+}
+*/
+
+/*Interferes with Bootstap layout
+#footer {
+  display: grid;
+  grid-auto-flow: row;
+  row-gap: 0.2rem;
+  margin-top: 1rem;
+}*/
+
+.grid {
+  display: grid;
+  grid-auto-flow: column;
+}
+.title {
+  margin-bottom: 0;
+}
+.subtitle {
+  margin-top: 0;
+}
+/*Bootstrap already sets this
+html {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}*/
+
+ul,
+ol {
+  margin-left: 0;
+  padding-left: 0;
+}
+li {
+  margin-left: 1rem;
+}
+
+a {
+  text-decoration: none;
+}
