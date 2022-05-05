@@ -46,49 +46,29 @@ function showBlankQuote() {
     //console.log(letter);
     let blank = document.createElement("div");
     let $blank = $(blank);
-    $blank.addClass("col btn btn-secondary");
+    $blank.addClass("col btn");
     if (isLetter(character)) {
       //console.log("character is a letter");
       $blank.attr("value", character);
       $blank.text("?");
+      $blank.addClass("btn-secondary");
       $word.append($blank);
     } else {
       //console.log("character is a punctuation");
-      if (character == " ") character = "_";
+      //if (character == " ") character = "_";
+      //if (character != " ") {
       $blank.text(character);
       $("#quote").append($word);
       $("#quote").append($blank);
       word = document.createElement("div");
       $word = $(word);
+      //}
     }
-    if (isLetter(character)) {
-      //Quote is missing final punctuation
-      //console.log("last character is a letter");
-      $("#quote").append($word);
-    }
-    /*
-    switch (character) {
-      case " ":
-        $blank.text("_");
-
-        break;
-      case ".":
-        $blank.text(".");
-        break;
-      case ",":
-        $blank.text(",");
-        break;
-      case ";":
-        $blank.text(";");
-        break;
-      case ":":
-        $blank.text(":");
-        break;
-      default:
-        break;
-    }*/
-
-    //$("#quote").append($blank);
+  }
+  if (isLetter(character)) {
+    //Quote is missing final punctuation
+    console.log("last character is a letter");
+    $("#quote").append($word);
   }
   $("#author").html(author);
 }
