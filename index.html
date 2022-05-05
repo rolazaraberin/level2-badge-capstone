@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head id="head">
+    <title>API Developer</title>
+    <!--import all CSS and JS files that the site pages will use-->
+    <link rel="icon" href="favicon.ico" type="assets/favicon.ico" />
+    <link href="css/examples.css" rel="stylesheet" type="text/css" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="css/index.css" rel="stylesheet" type="text/css" />
+    <script src="scripts/index.js" type="text/javascript" defer></script>
+    <script src="scripts/examples.js" type="text/javascript"></script>
+    <script src="scripts/jquery.js" type="text/javascript"></script>
+    <script
+      src="scripts/bootstrap.bundle.min.js"
+      type="text/javascript"
+    ></script>
+  </head>
+  <body class="container m-2">
+    <header class="row row-cols-2">
+      <div id="menu" class="col-auto dropdown">
+        <button
+          class="btn btn-primary dropdown-toggle"
+          type="button"
+          id="dropdownButton"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          Skills
+        </button>
+        <ul
+          id="skillsMenu"
+          class="dropdown-menu"
+          aria-labelledby="skillsButton"
+        >
+          <!--Edit these dropdown menu links-->
+          <!--index.js will load them automatically-->
+          <li>
+            <a class="dropdown-item" href="index.html">Skills</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill1-REST-API.html">Skill 1</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill2-REST-utility.html">Skill 2</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill3-query-string.html">Skill 3</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill4-api-keys.html">Skill 4</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill5-read-response.html"
+              >Skill 5</a
+            >
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill6-json-payload.html">Skill 6</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill7-response-codes.html"
+              >Skill 7</a
+            >
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill8-fetch.html">Skill 8</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill9-ajax.html">Skill 9</a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="skill10-display-response.html"
+              >Skill 10</a
+            >
+          </li>
+        </ul>
+      </div>
+      <details class="col-auto text-secondary">
+        <summary>info</summary>
+        <p>
+          A server (like <code>Live Server</code>) must be used to load pages in
+          the dropdown menu
+        </p>
+      </details>
+    </header>
+
+    <main class="row row-cols-1">
+      <section class="col" id="infoSection">
+        <h1 class="title">API Developer 1</h1>
+        <p>A software developer who can interact with simple REST API's.</p>
+        <h3 class="subtitle">Master the following skills</h3>
+        <ol>
+          <li>Understand the utility of REST API's</li>
+          <li>Able to read and write to a REST API using a REST Utility</li>
+          <li>Understands how and when to use querystring</li>
+          <li>Can use API Keys to gain access to secured data</li>
+          <li>Read API responses.</li>
+          <li>Properly form JSON payloads for requests</li>
+          <li>
+            Recognize common HTTP Error codes (200's, 300's, 400's, 500's)
+          </li>
+          <li>
+            Utilize JavaScript's built-in Fetch (get, put, post, delete) to
+            interact with an API
+          </li>
+          <li>
+            Utilize JQuery's AJAX functions (get, put, post, delete) to interact
+            with an API
+          </li>
+          <li>Process API response to display data on a web page</li>
+        </ol>
+      </section>
+    </main>
+
+    <footer class="row row-cols-auto" id="footer">
+      <hr class="col-12" />
+      <a class="col" href="https://github.com/public-apis/public-apis"
+        >Public APIs</a
+      >
+      <a class="col" href="https://gorest.co.in/">Sandbox APIs</a>
+      <a
+        class="col"
+        href="https://www.w3schools.com/jquery/jquery_ajax_load.asp"
+        >jQuery .load()</a
+      >
+      <a class="col" href="https://www.youtube.com/watch?v=XhMGV8PzyOg"
+        >Video tutorial: jQuery load</a
+      >
+      <a class="col" href="https://api.jquery.com/jQuery.get/">jQuery.get()</a>
+    </footer>
+  </body>
+</html>
