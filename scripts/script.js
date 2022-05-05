@@ -17,7 +17,7 @@ async function start() {
   showLoadingScreen();
   await getQuote();
   closeLoadingScreen();
-  showQuote();
+  showBlankQuote();
   showKeyboard();
 }
 
@@ -30,16 +30,74 @@ function closeLoadingScreen() {
 async function getQuote() {
   let baseUrl = "https://api.quotable.io/random";
   let queryString = "?maxLength=100";
-  let url = baseUrl + queryString;
+  //let url = baseUrl + queryString;
+  let url = "randomQuote.json";
   //jQuery.get(url, logResults);
   let response = await jQuery.get(url);
   console.log("server response", response);
   quote = response.content;
   author = response.author;
 }
-function showQuote() {
-  $("#quote").html(quote);
+function showBlankQuote() {
+  let character;
+  let word = document.createElement("div");
+  let $word = $(word);
+  for (character of quote) {
+    //console.log(letter);
+    let blank = document.createElement("div");
+    let $blank = $(blank);
+    $blank.addClass("col btn btn-secondary");
+    if (isLetter(character)) {
+      //console.log("character is a letter");
+      $blank.attr("value", character);
+      $blank.text("?");
+      $word.append($blank);
+    } else {
+      //console.log("character is a punctuation");
+      if (character == " ") character = "_";
+      $blank.text(character);
+      $("#quote").append($word);
+      $("#quote").append($blank);
+      word = document.createElement("div");
+      $word = $(word);
+    }
+    if (isLetter(character)) {
+      //Quote is missing final punctuation
+      //console.log("last character is a letter");
+      $("#quote").append($word);
+    }
+    /*
+    switch (character) {
+      case " ":
+        $blank.text("_");
+
+        break;
+      case ".":
+        $blank.text(".");
+        break;
+      case ",":
+        $blank.text(",");
+        break;
+      case ";":
+        $blank.text(";");
+        break;
+      case ":":
+        $blank.text(":");
+        break;
+      default:
+        break;
+    }*/
+
+    //$("#quote").append($blank);
+  }
   $("#author").html(author);
+}
+function isLetter(char) {
+  //console.log("checking if letter");
+  return char.match(/[a-z]/i);
+}
+function revealQuote() {
+  console.log("revealing quote");
 }
 function showKeyboard() {
   $("#keyboard").removeClass("d-none");
@@ -56,15 +114,34 @@ function pressedLetter(event) {
   let $target = $(`#keyboard button:contains(${letter})`);
   //console.log("target", target);
   $target.attr("disabled", true);
-  revealLetter(letter);
+  let result = revealLetter(letter);
+  if (!result) {
+    console.log("letter not in quote");
+  }
   incrementGuessCount();
 }
 function revealLetter(letter) {
-  console.log("revealing letter", letter);
+  //console.log("revealing letter", letter);
+  let isLetterFound = false;
+  let $blanks = $("#quote div[value]");
+  let blank;
+  for (blank of $blanks) {
+    //console.log("blank", blank);
+    let $blank = $(blank);
+    let hiddenLetter = $blank.attr("value");
+    if (letter == hiddenLetter.toLowerCase()) {
+      isLetterFound = true;
+      $blank.text(hiddenLetter);
+      $blank.removeAttr("value");
+      //console.log("letter is found");
+    }
+    //console.log("hiddenLetter", hiddenLetter);
+  }
+  return isLetterFound;
 }
 function incrementGuessCount() {
   let $guess = $("#guessCount");
-  let guessCount = $guess.text() || 0;
+  let guessCount = $guess.text();
   guessCount++;
   $guess.text(guessCount);
 }
