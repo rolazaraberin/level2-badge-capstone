@@ -11,58 +11,73 @@
       src="scripts/bootstrap.bundle.min.js"
       type="text/javascript"
     ></script>
+    <script src="scripts/script.js" type="text/javascript" defer></script>
   </head>
-  <body class="container m-2">
-    <header class="row row-cols-2">
-      <div id="menu" class="col-auto dropdown">
-        <button
-          class="btn btn-primary dropdown-toggle"
-          type="button"
-          id="dropdownButton"
-          data-bs-toggle="dropdown"
-          aria-expanded="false"
-        >
-          Skills
-        </button>
-        <ul
-          id="skillsMenu"
-          class="dropdown-menu"
-          aria-labelledby="skillsButton"
-        >
-          <!--Edit these dropdown menu links-->
-          <!--index.js will load them automatically-->
-          <li>
-            <a class="dropdown-item" href="index.html">Skills</a>
-          </li>
-        </ul>
-      </div>
-      <details class="col-auto text-secondary">
-        <summary>info</summary>
-        <p>
-          A server (like <code>Live Server</code>) must be used to load pages in
-          the dropdown menu
-        </p>
-      </details>
+  <body class="container">
+    <header class="row row-cols-1">
+      <section class="col" id="infoSection">
+        <h1 class="title">Guess that quote!!!</h1>
+        <h3 class="subtitle">How many guesses will it take?</h3>
+        <ol>
+          <li>Guess letters to fill in the blanks</li>
+          <li>Type in the quote before all the blanks are filled</li>
+          <li>The lower the guesses, the higher the score</li>
+        </ol>
+      </section>
     </header>
 
     <main class="row row-cols-1">
-      <section class="col" id="infoSection">
-        <h1 class="title">Front-End Developer 2</h1>
-        <p>Create a dynamic web application and deploy it to a public url.</p>
-        <h3 class="subtitle">Project</h3>
-        <p>
-          Combine the knowledge from previous badges and deploy a functional
-          browser application to Heroku. Web application must properly
-          implement/utilize skills required in the badges contained in the same
-          level.
-        </p>
+      <section class="col">
+        <button id="startButton" class="btn btn-primary">Start</button>
+      </section>
+      <section id="quote" class="col"></section>
+      <section id="author" class="col"></section>
+      <section id="keyboard" class="col row">
+        <div class="col-12">
+          <button class="btn btn-secondary">q</button>
+          <button class="btn btn-secondary">w</button>
+          <button class="btn btn-secondary">e</button>
+          <button class="btn btn-secondary">r</button>
+          <button class="btn btn-secondary">t</button>
+          <button class="btn btn-secondary">y</button>
+          <button class="btn btn-secondary">u</button>
+          <button class="btn btn-secondary">i</button>
+          <button class="btn btn-secondary">o</button>
+          <button class="btn btn-secondary">p</button>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-secondary">a</button>
+          <button class="btn btn-secondary">s</button>
+          <button class="btn btn-secondary">d</button>
+          <button class="btn btn-secondary">f</button>
+          <button class="btn btn-secondary">g</button>
+          <button class="btn btn-secondary">h</button>
+          <button class="btn btn-secondary">j</button>
+          <button class="btn btn-secondary">k</button>
+          <button class="btn btn-secondary">l</button>
+        </div>
+        <div class="col-12">
+          <button class="btn btn-secondary">z</button>
+          <button class="btn btn-secondary">x</button>
+          <button class="btn btn-secondary">c</button>
+          <button class="btn btn-secondary">v</button>
+          <button class="btn btn-secondary">b</button>
+          <button class="btn btn-secondary">n</button>
+          <button class="btn btn-secondary">m</button>
+        </div>
       </section>
     </main>
 
     <footer class="row row-cols-auto justify-content-center" id="footer">
       <hr class="col-12" />
-      <a class="col" href="#">link 1</a>
-      <a class="col" href="#">link 2</a>
+      <div class="col">
+        Number of guesses:
+        <div id="guessCount"></div>
+      </div>
+      <div class="col">
+        Best guess:
+        <div id="bestGuessCount"></div>
+      </div>
     </footer>
   </body>
 </html>
