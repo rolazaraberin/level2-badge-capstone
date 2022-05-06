@@ -31,18 +31,16 @@
     <main class="row row-cols-1">
       <section class="col">
         <button id="startButton" class="btn btn-primary">Start</button>
+        <button id="solveButton" class="btn btn-primary d-none">Solve</button>
       </section>
-      <section class="col">
-        <div class="row row-cols-1">
-          <div
-            id="quote"
-            class="row row-cols-auto justify-content-center"
-          ></div>
-          <div id="author" class="col"></div>
-        </div>
+      <section id="quoteSection" class="col d-none">
+        <blockquote class="blockquote row row-cols-1">
+          <div id="quote" class="row row-cols-auto"></div>
+        </blockquote>
+        <cite id="author" class="blockquote-footer col"></cite>
       </section>
 
-      <section id="letterSection" class="col">
+      <section id="letterSection" class="col d-none">
         <div class="row row-cols-auto justify-content-center">
           <button class="col btn btn-secondary">q</button>
           <button class="col btn btn-secondary">w</button>
@@ -76,18 +74,25 @@
           <button class="col btn btn-secondary">m</button>
         </div>
       </section>
-      <section id="messageArea" class="col" style="height: 2rem"></section>
+      <section
+        id="messageSection"
+        class="row row-cols-auto justify-content-center"
+      >
+        <div id="messageArea" class="btn col"></div>
+      </section>
     </main>
 
-    <footer class="row row-cols-auto justify-content-center" id="footer">
+    <footer class="row row-cols-auto justify-content-center" id="scoreSection">
       <hr class="col-12" />
       <div class="col">
-        Number of guesses:
-        <div id="guessCount">0</div>
+        Score:
+        <!--<div id="guessCount">0</div>-->
+        <div id="score">0</div>
       </div>
       <div class="col">
-        Best guess:
-        <div id="bestGuessCount">0</div>
+        Your highest score:
+        <!--<div id="bestGuessCount">0</div>-->
+        <div id="highScore">0</div>
       </div>
     </footer>
   </body>
