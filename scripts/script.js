@@ -1,6 +1,6 @@
 $("#startButton").click(start);
-$("#keyboard button").click(guessedLetter);
-$(document).keypress(pressedLetter);
+$("#letterSection button").click(pressedLetter);
+$(document).keypress(pressedKey);
 
 /************************************************
  * GLOBAL VARIABLES
@@ -17,7 +17,7 @@ async function start() {
   showLoadingScreen();
   await getQuote();
   closeLoadingScreen();
-  showBlankQuote();
+  createBlanks();
   showKeyboard();
 }
 
@@ -34,11 +34,11 @@ async function getQuote() {
   let url = "randomQuote.json";
   //jQuery.get(url, logResults);
   let response = await jQuery.get(url);
-  console.log("server response", response);
+  //console.log("server response", response);
   quote = response.content;
   author = response.author;
 }
-function showBlankQuote() {
+function createBlanks() {
   let character;
   let word = document.createElement("div");
   let $word = $(word);
@@ -56,13 +56,13 @@ function showBlankQuote() {
     } else {
       //console.log("character is a punctuation");
       //if (character == " ") character = "_";
-      //if (character != " ") {
-      $blank.text(character);
       $("#quote").append($word);
-      $("#quote").append($blank);
+      if (character != " ") {
+        $blank.text(character);
+        $("#quote").append($blank);
+      }
       word = document.createElement("div");
       $word = $(word);
-      //}
     }
   }
   if (isLetter(character)) {
@@ -80,28 +80,37 @@ function revealQuote() {
   console.log("revealing quote");
 }
 function showKeyboard() {
-  $("#keyboard").removeClass("d-none");
+  $("#letterSection").removeClass("d-none");
 }
-function guessedLetter(event) {
-  let letter = event.target.innerText;
-  $(event.target).attr("disabled", true);
-  revealLetter(letter);
+function guessedLetter(letter) {
   incrementGuessCount();
-}
-function pressedLetter(event) {
-  //console.log("pressed", event);
-  let letter = event.originalEvent.key;
-  let $target = $(`#keyboard button:contains(${letter})`);
-  //console.log("target", target);
-  $target.attr("disabled", true);
+  disableLetter(letter);
   let result = revealLetter(letter);
   if (!result) {
-    console.log("letter not in quote");
+    outputMessage("Guess again");
+    //console.log("letter not in quote");
   }
-  incrementGuessCount();
+
+  function disableLetter(letter) {
+    let $letterElement = $(`#letterSection button:contains(${letter})`);
+    $letterElement.attr("disabled", true);
+  }
+}
+function pressedLetter(event) {
+  let letter = event.target.innerText;
+  guessedLetter(letter);
+}
+function pressedKey(event) {
+  //console.log("pressed", event);
+  let letter = event.originalEvent.key;
+  guessedLetter(letter);
+}
+function outputMessage(message) {
+  $("#message").text(message);
 }
 function revealLetter(letter) {
   //console.log("revealing letter", letter);
+  letter = letter.toLowerCase();
   let isLetterFound = false;
   let $blanks = $("#quote div[value]");
   let blank;
@@ -113,6 +122,8 @@ function revealLetter(letter) {
       isLetterFound = true;
       $blank.text(hiddenLetter);
       $blank.removeAttr("value");
+      let colorNone = { backgroundColor: "rgba(0, 0, 0, 0)", color: "black" };
+      $blank.animate(colorNone);
       //console.log("letter is found");
     }
     //console.log("hiddenLetter", hiddenLetter);

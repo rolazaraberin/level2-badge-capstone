@@ -8,6 +8,7 @@
     <link href="css/styles.css" rel="stylesheet" type="text/css" />
     <script src="scripts/index.js" type="text/javascript" defer></script>
     <script src="scripts/jquery.js" type="text/javascript"></script>
+    <script src="plugins/jquery.color.js" type="text/javascript"></script>
     <script
       src="scripts/bootstrap.bundle.min.js"
       type="text/javascript"
@@ -31,9 +32,17 @@
       <section class="col">
         <button id="startButton" class="btn btn-primary">Start</button>
       </section>
-      <section id="quote" class="row row-cols-auto"></section>
-      <section id="author" class="col"></section>
-      <section id="keyboard" class="col">
+      <section class="col">
+        <div class="row row-cols-1">
+          <div
+            id="quote"
+            class="row row-cols-auto justify-content-center"
+          ></div>
+          <div id="author" class="col"></div>
+        </div>
+      </section>
+
+      <section id="letterSection" class="col">
         <div class="row row-cols-auto justify-content-center">
           <button class="col btn btn-secondary">q</button>
           <button class="col btn btn-secondary">w</button>
@@ -67,6 +76,7 @@
           <button class="col btn btn-secondary">m</button>
         </div>
       </section>
+      <section id="message" class="col">message</section>
     </main>
 
     <footer class="row row-cols-auto justify-content-center" id="footer">
