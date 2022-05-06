@@ -1,7 +1,5 @@
-$("#startButton").click(start);
+$("#startButton").click(startRound);
 $("#solveButton").click(solve);
-$("#letterSection button").click(pressedLetter);
-$(document).keypress(pressedKey);
 
 /************************************************
  * GLOBAL VARIABLES
@@ -16,8 +14,11 @@ var scoreMultiplier = 100;
 /************************************************
  * FUNCTIONS
  ***********************************************/
-async function start() {
+async function startRound() {
   showLoadingScreen();
+  resetQuoteSection();
+  resetLetterSection();
+  resetMessageSection();
   await getQuote();
   hideStartButton();
   showSolveButton();
@@ -27,6 +28,8 @@ async function start() {
   showScore();
   showQuoteSection();
   showLetterSection();
+  $("#letterSection button").click(pressedLetter);
+  $(document).keypress(pressedKey);
 
   /**************************************
    * HELPER FUNCTIONS
@@ -43,6 +46,35 @@ async function start() {
   function showScore() {
     $("#scoreSection").removeClass("d-none");
   }
+  function resetQuoteSection() {
+    $("#quote").html("");
+  }
+  function resetLetterSection() {
+    let $letters = $("#letterSection button");
+    $letters.attr("disabled", false);
+  }
+  function resetMessageSection() {
+    //$("#messageArea").html("");
+    outputMessage("", "clear");
+  }
+}
+function endRound() {
+  $("#letterSection button").off("click");
+  $(document).off("keypress");
+  setHighScore();
+  showStartButton();
+  hideSolveButton();
+  outputMessage("You guessed the quote!", "highlight", "green");
+
+  /************************************
+   * HELPER FUNCTIONS
+   ************************************/
+  function showStartButton() {
+    $("#startButton").removeClass("d-none");
+  }
+  function hideSolveButton() {
+    $("#solveButton").addClass("d-none");
+  }
 }
 function setScore() {
   score = numberOfLetters(quote) * scoreMultiplier;
@@ -51,6 +83,11 @@ function setScore() {
 function decrementScore() {
   score -= scoreMultiplier;
   $("#score").text(score);
+}
+function setHighScore() {
+  let $highScore = $("#highScore");
+  let highScore = $("#highScore").text();
+  if (highScore < score) $highScore.text(score);
 }
 function numberOfLetters(string) {
   let letterCount = 0;
@@ -152,6 +189,7 @@ function guessedLetter(letter) {
     outputMessage("Guess again", "flash", "red");
     //console.log("letter not in quote");
   }
+  if (noMoreBlanks()) endRound();
 
   /*******************************************
    * HELPER FUNCITONS
@@ -165,6 +203,10 @@ function guessedLetter(letter) {
   function disableLetter(letter) {
     let $letterElement = $(`#letterSection button:contains(${letter})`);
     $letterElement.attr("disabled", true);
+  }
+  function noMoreBlanks() {
+    $blanks = $("#quoteSection .blankLetter");
+    return $blanks.length == 0;
   }
 }
 function pressedLetter(event) {
@@ -187,6 +229,10 @@ function outputMessage(message, effect, color) {
       break;
     case "highlight":
       $messageArea.animate({ "background-color": color });
+      break;
+    case "clear":
+      let clear = "rgba(0,0,0,0)";
+      $messageArea.css({ "background-color": clear });
       break;
   }
 }
