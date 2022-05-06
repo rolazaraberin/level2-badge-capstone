@@ -9,6 +9,7 @@ var quote;
 var author;
 var guessCount;
 var bestGuessCount;
+//var unguessedLetters;
 
 /************************************************
  * FUNCTIONS
@@ -51,7 +52,7 @@ function createBlanks() {
       //console.log("character is a letter");
       $blank.attr("value", character);
       $blank.text("?");
-      $blank.addClass("btn-secondary");
+      $blank.addClass("btn-secondary blankLetter");
       $word.append($blank);
     } else {
       //console.log("character is a punctuation");
@@ -85,16 +86,37 @@ function showKeyboard() {
 function guessedLetter(letter) {
   incrementGuessCount();
   disableLetter(letter);
-  let result = revealLetter(letter);
-  if (!result) {
-    outputMessage("Guess again");
+  let isLetterFound = revealLettersInQuote(letter);
+  if (!isLetterFound) {
+    outputMessage("Guess again", "flash", "red");
     //console.log("letter not in quote");
   }
 
+  /*******************************************
+   * HELPER FUNCITONS
+   *******************************************/
+  function incrementGuessCount() {
+    let $guess = $("#guessCount");
+    let guessCount = $guess.text();
+    guessCount++;
+    $guess.text(guessCount);
+  }
   function disableLetter(letter) {
     let $letterElement = $(`#letterSection button:contains(${letter})`);
     $letterElement.attr("disabled", true);
   }
+  /*
+  function isLetterInQuote(letter) {
+    //let $blanks = $("#quote .blank");
+    let $blanks = $("#quote .blankLetter");
+    for (let blank of $blanks) {
+      if (letter == $(blank).attr("value").toLowerCase()) return true;
+    }
+    //let $letters = $blanks.each().attr("value");
+    //console.log("blanks", $blanks);
+    //console.log("letters", $letters);
+    return false;
+  }*/
 }
 function pressedLetter(event) {
   let letter = event.target.innerText;
@@ -105,34 +127,52 @@ function pressedKey(event) {
   let letter = event.originalEvent.key;
   guessedLetter(letter);
 }
-function outputMessage(message) {
-  $("#message").text(message);
+function outputMessage(message, effect, color) {
+  let $messageArea = $("#messageArea");
+  $messageArea.text(message);
+  switch (effect) {
+    case "flash":
+      let originalColor = $messageArea.css("background-color");
+      $messageArea.animate({ "background-color": color });
+      $messageArea.animate({ "background-color": originalColor });
+      break;
+    case "highlight":
+      $messageArea.animate({ "background-color": color });
+      break;
+  }
 }
-function revealLetter(letter) {
-  //console.log("revealing letter", letter);
-  letter = letter.toLowerCase();
+function revealLettersInQuote(letter) {
+  let $blankLetters = $("#quote .blankLetter");
+  console.log("blank letters", $blankLetters);
   let isLetterFound = false;
-  let $blanks = $("#quote div[value]");
-  let blank;
-  for (blank of $blanks) {
-    //console.log("blank", blank);
-    let $blank = $(blank);
-    let hiddenLetter = $blank.attr("value");
-    if (letter == hiddenLetter.toLowerCase()) {
+  for (let blankLetter of $blankLetters) {
+    if (isMatch(blankLetter, letter)) {
+      revealLetter(blankLetter);
+      doRevealAnimation(blankLetter);
+      removeBlankStatus(blankLetter);
       isLetterFound = true;
-      $blank.text(hiddenLetter);
-      $blank.removeAttr("value");
-      let colorNone = { backgroundColor: "rgba(0, 0, 0, 0)", color: "black" };
-      $blank.animate(colorNone);
-      //console.log("letter is found");
     }
-    //console.log("hiddenLetter", hiddenLetter);
   }
   return isLetterFound;
-}
-function incrementGuessCount() {
-  let $guess = $("#guessCount");
-  let guessCount = $guess.text();
-  guessCount++;
-  $guess.text(guessCount);
+
+  /*********************************************
+   * HELPER FUNCTIONS
+   *********************************************/
+
+  function isMatch(blankElement, letter) {
+    return letter.toLowerCase() == $(blankElement).attr("value").toLowerCase();
+  }
+  function revealLetter(blankElement) {
+    let $blankElement = $(blankElement);
+    let hiddenLetter = $blankElement.attr("value");
+    $blankElement.text(hiddenLetter);
+  }
+  function removeBlankStatus(blankElement) {
+    $(blankElement).removeAttr("value");
+    $(blankElement).removeClass("blankLetter");
+  }
+  function doRevealAnimation(blankElement) {
+    let reveal = { backgroundColor: "rgba(0, 0, 0, 0)", color: "black" };
+    $(blankElement).animate(reveal);
+  }
 }
