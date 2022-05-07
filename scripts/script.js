@@ -223,17 +223,30 @@ function outputMessage(message, effect, color) {
   $messageArea.text(message);
   switch (effect) {
     case "flash":
-      let originalColor = $("#messageSection").css("background-color");
-      $messageArea.animate({ "background-color": color });
-      $messageArea.animate({ "background-color": originalColor });
+      flash(color);
       break;
     case "highlight":
-      $messageArea.animate({ "background-color": color });
+      highlight(color);
       break;
     case "clear":
-      let clear = "rgba(0,0,0,0)";
-      $messageArea.css({ "background-color": clear });
+      clearMessage();
       break;
+  }
+
+  /******************************************
+   * HELPER FUNCTIONS
+   ******************************************/
+  function flash(colorString) {
+    let originalColor = $("#messageSection").css("background-color");
+    $messageArea.animate({ "background-color": colorString });
+    $messageArea.animate({ "background-color": originalColor });
+  }
+  function highlight(colorString) {
+    $messageArea.animate({ "background-color": colorString });
+  }
+  function clearMessage() {
+    let clear = "rgba(0,0,0,0)";
+    $messageArea.css({ "background-color": clear });
   }
 }
 function revealLettersInQuote(letter) {
