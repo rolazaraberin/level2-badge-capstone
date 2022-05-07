@@ -1,5 +1,6 @@
 $("#startButton").click(startRound);
 $("#solveButton").click(solve);
+$("#submitButton").click(submitGuess);
 
 /************************************************
  * GLOBAL VARIABLES
@@ -43,8 +44,15 @@ async function startRound() {
   function showQuoteSection() {
     $("#quoteSection").removeClass("d-none");
   }
+  function showLetterSection() {
+    $("#letterSection").removeClass("d-none");
+  }
   function showScore() {
     $("#scoreSection").removeClass("d-none");
+  }
+  function setScore() {
+    score = numberOfLetters(quote) * scoreMultiplier;
+    $("#score").text(score);
   }
   function resetQuoteSection() {
     $("#quote").html("");
@@ -72,17 +80,9 @@ function endRound() {
   function showStartButton() {
     $("#startButton").removeClass("d-none");
   }
-  function hideSolveButton() {
-    $("#solveButton").addClass("d-none");
-  }
 }
-function setScore() {
-  score = numberOfLetters(quote) * scoreMultiplier;
-  $("#score").text(score);
-}
-function decrementScore() {
-  score -= scoreMultiplier;
-  $("#score").text(score);
+function hideSolveButton() {
+  $("#solveButton").addClass("d-none");
 }
 function setHighScore() {
   let $highScore = $("#highScore");
@@ -98,6 +98,42 @@ function numberOfLetters(string) {
 }
 function solve() {
   console.log("clicked solve");
+  hideSolveButton();
+  showSubmitButton();
+  showSolveBox();
+  disableKeypressGuesses();
+  disableLetterGuesses();
+  enableEnterKeyToSubmit();
+
+  /***************************************
+   * HELPER FUNCTIONS
+   ***************************************/
+  function showSubmitButton() {
+    console.log("displaying submit button");
+  }
+  function showSolveBox() {
+    console.log("displaying solve box");
+  }
+  function disableKeypressGuesses() {
+    console.log("disabling keypress guesses");
+  }
+  function disableLetterGuesses() {
+    console.log("disabling keypress guesses");
+  }
+  function enableEnterKeyToSubmit() {
+    console.log("enabling enter key to submit");
+  }
+}
+function submitGuess() {
+  console.log("pressed solve submit");
+  disableEnterKeyToSubmit();
+
+  /****************************************
+   * HELPER FUNCTIONS
+   ****************************************/
+  function disableEnterKeyToSubmit() {
+    console.log("disabling enter key");
+  }
 }
 async function showLoadingScreen() {
   console.log("loading...");
@@ -175,9 +211,6 @@ function isLetter(character) {
 function revealQuote() {
   console.log("revealing quote");
 }
-function showLetterSection() {
-  $("#letterSection").removeClass("d-none");
-}
 function guessedLetter(letter) {
   //incrementGuessCount();
   decrementScore();
@@ -189,7 +222,7 @@ function guessedLetter(letter) {
     outputMessage("Guess again", "flash", "red");
     //console.log("letter not in quote");
   }
-  if (noMoreBlanks()) endRound();
+  if (isNoMoreBlanks()) endRound();
 
   /*******************************************
    * HELPER FUNCITONS
@@ -204,17 +237,23 @@ function guessedLetter(letter) {
     let $letterElement = $(`#letterSection button:contains(${letter})`);
     $letterElement.attr("disabled", true);
   }
-  function noMoreBlanks() {
+  function isNoMoreBlanks() {
     $blanks = $("#quoteSection .blankLetter");
     return $blanks.length == 0;
   }
+  function decrementScore() {
+    score -= scoreMultiplier;
+    $("#score").text(score);
+  }
 }
 function pressedLetter(event) {
+  event.stopPropagation();
   let letter = event.target.innerText;
   guessedLetter(letter);
 }
 function pressedKey(event) {
   //console.log("pressed", event);
+  event.stopPropagation();
   let letter = event.originalEvent.key;
   guessedLetter(letter);
 }
