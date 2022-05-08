@@ -82,12 +82,14 @@ function showSolveButton() {
   $("#solveButton").removeClass("d-none");
 }
 function endRound() {
-  $("#letterSection button").off("click");
-  $(document).off("keypress");
+  disableLetterPressGuesses();
+  //$("#letterSection button").off("click");
+  disableKeypressGuesses();
+  //$(document).off("keypress");
   setHighScore();
   showStartButton();
   hideSolveButton();
-  outputMessage("You guessed the quote!", "highlight", "green");
+  outputMessageSolved();
 
   /************************************
    * HELPER FUNCTIONS
@@ -103,6 +105,10 @@ function setHighScore() {
   let $highScore = $("#highScore");
   let highScore = $("#highScore").text();
   if (highScore < score) $highScore.text(score);
+}
+function decrementScore() {
+  score -= scoreMultiplier;
+  $("#score").text(score);
 }
 function numberOfLetters(string) {
   let letterCount = 0;
@@ -158,6 +164,7 @@ function solve() {
   }*/
 }
 function cancel(event) {
+  clearGuess();
   hideSolveBox();
   hideCancelButton();
   showSolveButton();
@@ -172,6 +179,9 @@ function cancel(event) {
   }
   function hideSolveBox() {
     $("#solveBox").addClass("d-none");
+  }
+  function clearGuess() {
+    $("#guess").val("");
   }
 }
 function submitGuess(event) {
@@ -188,9 +198,16 @@ function submitGuess(event) {
   console.log("value", value);*/
   let guess = event.target.guess.value;
   if (isGuessCorrect(guess)) {
-    console.log("guess is correct");
+    //console.log("guess is correct");
+    hideSolveSection();
+    revealLettersInQuote();
+    //revealQuote();
+    endRound();
+    //outputMessageCorrect();
   } else {
-    console.log("guess is not correct");
+    //console.log("guess is not correct");
+    decrementScore();
+    outputMessageIncorrect();
   }
   //disableEnterKeyToSubmit();
   //restoreSolveButton();
@@ -211,9 +228,9 @@ function submitGuess(event) {
   function isGuessCorrect(guessString) {
     //console.log("checking guess");
     let simplifiedQuote = toLowerLettersOnly(quote);
-    console.log("quote", simplifiedQuote);
+    //console.log("quote", simplifiedQuote);
     let simplifiedGuess = toLowerLettersOnly(guessString);
-    console.log("guess", simplifiedGuess);
+    //console.log("guess", simplifiedGuess);
     return simplifiedGuess == simplifiedQuote;
   }
   /*function simplify(string) {
@@ -228,6 +245,9 @@ function submitGuess(event) {
       }
     }
     return lettersOnly;
+  }
+  function hideSolveSection() {
+    $("#cancelButton").click();
   }
 }
 async function showLoadingScreen() {
@@ -303,18 +323,25 @@ function isLetter(character) {
   //console.log("checking if letter");
   return character.match(/[a-z]/i);
 }
-function revealQuote() {
-  console.log("revealing quote");
-}
+/*function revealQuote() {
+  //console.log("revealing quote");
+  let $blankLetters = $("#quote .blankLetter");
+  //console.log("blank letters", $blankLetters);
+  for (let blankLetter of $blankLetters) {
+    revealLetter(blankLetter);
+    revealAnimation(blankLetter);
+    removeBlankStatus(blankLetter);
+  }
+}*/
 function guessedLetter(letter) {
   //incrementGuessCount();
   decrementScore();
   disableLetter(letter);
   let isLetterFound = revealLettersInQuote(letter);
   if (isLetterFound) {
-    outputMessage("Good guess!", "flash", "green");
+    outputMessageCorrect();
   } else {
-    outputMessage("Guess again", "flash", "red");
+    outputMessageIncorrect();
     //console.log("letter not in quote");
   }
   if (isNoMoreBlanks()) endRound();
@@ -322,12 +349,6 @@ function guessedLetter(letter) {
   /*******************************************
    * HELPER FUNCITONS
    *******************************************/
-  /*function incrementGuessCount() {
-    let $guess = $("#guessCount");
-    let guessCount = $guess.text();
-    guessCount++;
-    $guess.text(guessCount);
-  }*/
   function disableLetter(letter) {
     let $letterElement = $(`#letterSection button:contains(${letter})`);
     $letterElement.attr("disabled", true);
@@ -335,10 +356,6 @@ function guessedLetter(letter) {
   function isNoMoreBlanks() {
     $blanks = $("#quoteSection .blankLetter");
     return $blanks.length == 0;
-  }
-  function decrementScore() {
-    score -= scoreMultiplier;
-    $("#score").text(score);
   }
 }
 function pressedLetter(event) {
@@ -383,12 +400,22 @@ function outputMessage(message, effect, color) {
     $messageArea.css({ "background-color": clear });
   }
 }
+function outputMessageCorrect() {
+  outputMessage("Good guess!", "flash", "green");
+}
+function outputMessageIncorrect() {
+  outputMessage("Guess again", "flash", "red");
+}
+function outputMessageSolved() {
+  outputMessage("You guessed the quote!", "highlight", "green");
+}
 function revealLettersInQuote(letter) {
+  let isLetterFound = false;
   let $blankLetters = $("#quote .blankLetter");
   //console.log("blank letters", $blankLetters);
-  let isLetterFound = false;
   for (let blankLetter of $blankLetters) {
-    if (isMatch(blankLetter, letter)) {
+    if (letter == undefined || isMatch(blankLetter, letter)) {
+      //If letter is undefined, reveal the whole quote
       revealLetter(blankLetter);
       revealAnimation(blankLetter);
       removeBlankStatus(blankLetter);
