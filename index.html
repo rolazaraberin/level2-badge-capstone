@@ -28,15 +28,30 @@
       </section>
     </header>
 
-    <main class="row row-cols-1">
-      <section class="col">
-        <button id="startButton" class="btn btn-primary">Start</button>
-        <button id="solveButton" class="btn btn-primary d-none">Solve</button>
-        <input id="textBox" type="text" placeholder="Guess that quote!" />
-        <button id="cancelButton" class="btn btn-primary">X</button>
-        <button id="submitButton" class="btn btn-primary d-none">Submit</button>
+    <main class="row">
+      <section class="row">
+        <button id="startButton" class="btn btn-primary col-2">Start</button>
+        <button id="solveButton" class="btn btn-primary col-2 d-none">
+          Solve
+        </button>
+        <button id="cancelButton" class="btn btn-danger d-none col-2">
+          Cancel
+        </button>
+        <div id="solveBox" class="col-10 d-none">
+          <form id="solveForm" class="input-group btn-group">
+            <input
+              name="guess"
+              class="form-control"
+              type="text"
+              placeholder="Guess that quote!"
+            />
+            <button type="submit" class="input-group-text btn-success">
+              V
+            </button>
+          </form>
+        </div>
       </section>
-      <section id="quoteSection" class="col d-none">
+      <section id="quoteSection" class="col-12 d-none">
         <blockquote class="blockquote row row-cols-1">
           <div id="quote" class="row row-cols-auto"></div>
         </blockquote>

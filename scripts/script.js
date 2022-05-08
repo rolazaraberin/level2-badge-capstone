@@ -1,6 +1,9 @@
 $("#startButton").click(startRound);
 $("#solveButton").click(solve);
-$("#submitButton").click(submitGuess);
+//$("#submitButton").click(submitGuess);
+//$("#guess").on("submit", submitGuess);
+$("#solveForm").on("submit", submitGuess);
+$("#cancelButton").click(cancel);
 
 /************************************************
  * GLOBAL VARIABLES
@@ -29,17 +32,14 @@ async function startRound() {
   showScore();
   showQuoteSection();
   showLetterSection();
-  $("#letterSection button").click(pressedLetter);
-  $(document).keypress(pressedKey);
+  enableLetterPressGuesses();
+  enableKeypressGuesses();
 
   /**************************************
    * HELPER FUNCTIONS
    **************************************/
   function hideStartButton() {
     $("#startButton").addClass("d-none");
-  }
-  function showSolveButton() {
-    $("#solveButton").removeClass("d-none");
   }
   function showQuoteSection() {
     $("#quoteSection").removeClass("d-none");
@@ -65,6 +65,21 @@ async function startRound() {
     //$("#messageArea").html("");
     outputMessage("", "clear");
   }
+}
+function enableLetterPressGuesses() {
+  $("#letterSection button").on("click", pressedLetter);
+}
+function disableLetterPressGuesses() {
+  $("#letterSection button").off("click", pressedLetter);
+}
+function enableKeypressGuesses() {
+  $(document).on("keypress", pressedKey);
+}
+function disableKeypressGuesses() {
+  $(document).off("keypress", pressedKey);
+}
+function showSolveButton() {
+  $("#solveButton").removeClass("d-none");
 }
 function endRound() {
   $("#letterSection button").off("click");
@@ -97,42 +112,122 @@ function numberOfLetters(string) {
   return letterCount;
 }
 function solve() {
-  console.log("clicked solve");
+  //console.log("clicked solve");
   hideSolveButton();
-  showSubmitButton();
+  //changeSolveButtonToCancel();
+  //showSubmitButton();
+  showCancelButton();
   showSolveBox();
   disableKeypressGuesses();
-  disableLetterGuesses();
-  enableEnterKeyToSubmit();
+  disableLetterPressGuesses();
+  //enableEnterKeyToSubmit();
 
   /***************************************
    * HELPER FUNCTIONS
    ***************************************/
-  function showSubmitButton() {
+  /*function showSubmitButton() {
     console.log("displaying submit button");
+  }*/
+  function showCancelButton() {
+    $("#cancelButton").removeClass("d-none");
   }
   function showSolveBox() {
-    console.log("displaying solve box");
+    //console.log("displaying solve box");
+    $("#solveBox").removeClass("d-none");
   }
-  function disableKeypressGuesses() {
+  /*function disableKeypressGuesses() {
     console.log("disabling keypress guesses");
-  }
-  function disableLetterGuesses() {
-    console.log("disabling keypress guesses");
-  }
-  function enableEnterKeyToSubmit() {
+  }*/
+  /*function disableLetterGuesses() {
+    console.log("disabling letter guesses");
+  }*/
+  /*function enableEnterKeyToSubmit() {
     console.log("enabling enter key to submit");
+    $(document).on("keypress", pressEnterToSubmit);
+  }*/
+  /*function pressEnterToSubmit(event) {
+    //console.log("key pressed", event.key);
+    if (event.key == "Enter") {
+      console.log("enter pressed");
+    }
+  }*/
+  /*function changeSolveButtonToCancel() {
+    console.log("changing solve button to cancel");
+    //change color to btn-danger
+    //change label to cancel
+  }*/
+}
+function cancel(event) {
+  hideSolveBox();
+  hideCancelButton();
+  showSolveButton();
+  enableKeypressGuesses();
+  enableLetterPressGuesses();
+
+  /**********************************
+   * HELPER FUNCTIONS
+   **********************************/
+  function hideCancelButton() {
+    $("#cancelButton").addClass("d-none");
+  }
+  function hideSolveBox() {
+    $("#solveBox").addClass("d-none");
   }
 }
-function submitGuess() {
-  console.log("pressed solve submit");
-  disableEnterKeyToSubmit();
+function submitGuess(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  //console.log("pressed solve submit");
+  //let guess = event.filter("#guess").value;
+  /*console.log("event", event);
+  let target = event.target;
+  console.log("target", target);
+  let guess = target.guess;
+  console.log("guess", guess);
+  let value = guess.value;
+  console.log("value", value);*/
+  let guess = event.target.guess.value;
+  if (isGuessCorrect(guess)) {
+    console.log("guess is correct");
+  } else {
+    console.log("guess is not correct");
+  }
+  //disableEnterKeyToSubmit();
+  //restoreSolveButton();
+  //hideCancelButton();
+  //showSolveButton();
 
   /****************************************
    * HELPER FUNCTIONS
    ****************************************/
-  function disableEnterKeyToSubmit() {
+  /*function disableEnterKeyToSubmit() {
     console.log("disabling enter key");
+  }*/
+  /*function restoreSolveButton() {
+    console.log("restoring solve button");
+    //change color to btn-primary
+    //change label to solve
+  }*/
+  function isGuessCorrect(guessString) {
+    //console.log("checking guess");
+    let simplifiedQuote = toLowerLettersOnly(quote);
+    console.log("quote", simplifiedQuote);
+    let simplifiedGuess = toLowerLettersOnly(guessString);
+    console.log("guess", simplifiedGuess);
+    return simplifiedGuess == simplifiedQuote;
+  }
+  /*function simplify(string) {
+    //console.log("simplifying", string);
+    return toLettersOnly(string);
+  }*/
+  function toLowerLettersOnly(string) {
+    let lettersOnly = "";
+    for (let character of string) {
+      if (isLetter(character)) {
+        lettersOnly += character.toLowerCase();
+      }
+    }
+    return lettersOnly;
   }
 }
 async function showLoadingScreen() {
