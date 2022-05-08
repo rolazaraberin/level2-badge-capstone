@@ -131,9 +131,6 @@ function solve() {
   /***************************************
    * HELPER FUNCTIONS
    ***************************************/
-  /*function showSubmitButton() {
-    console.log("displaying submit button");
-  }*/
   function showCancelButton() {
     $("#cancelButton").removeClass("d-none");
   }
@@ -141,27 +138,6 @@ function solve() {
     //console.log("displaying solve box");
     $("#solveBox").removeClass("d-none");
   }
-  /*function disableKeypressGuesses() {
-    console.log("disabling keypress guesses");
-  }*/
-  /*function disableLetterGuesses() {
-    console.log("disabling letter guesses");
-  }*/
-  /*function enableEnterKeyToSubmit() {
-    console.log("enabling enter key to submit");
-    $(document).on("keypress", pressEnterToSubmit);
-  }*/
-  /*function pressEnterToSubmit(event) {
-    //console.log("key pressed", event.key);
-    if (event.key == "Enter") {
-      console.log("enter pressed");
-    }
-  }*/
-  /*function changeSolveButtonToCancel() {
-    console.log("changing solve button to cancel");
-    //change color to btn-danger
-    //change label to cancel
-  }*/
 }
 function cancel(event) {
   clearGuess();
@@ -187,15 +163,6 @@ function cancel(event) {
 function submitGuess(event) {
   event.preventDefault();
   event.stopPropagation();
-  //console.log("pressed solve submit");
-  //let guess = event.filter("#guess").value;
-  /*console.log("event", event);
-  let target = event.target;
-  console.log("target", target);
-  let guess = target.guess;
-  console.log("guess", guess);
-  let value = guess.value;
-  console.log("value", value);*/
   let guess = event.target.guess.value;
   if (isGuessCorrect(guess)) {
     //console.log("guess is correct");
@@ -209,22 +176,10 @@ function submitGuess(event) {
     decrementScore();
     outputMessageIncorrect();
   }
-  //disableEnterKeyToSubmit();
-  //restoreSolveButton();
-  //hideCancelButton();
-  //showSolveButton();
 
   /****************************************
    * HELPER FUNCTIONS
    ****************************************/
-  /*function disableEnterKeyToSubmit() {
-    console.log("disabling enter key");
-  }*/
-  /*function restoreSolveButton() {
-    console.log("restoring solve button");
-    //change color to btn-primary
-    //change label to solve
-  }*/
   function isGuessCorrect(guessString) {
     //console.log("checking guess");
     let simplifiedQuote = toLowerLettersOnly(quote);
@@ -233,10 +188,6 @@ function submitGuess(event) {
     //console.log("guess", simplifiedGuess);
     return simplifiedGuess == simplifiedQuote;
   }
-  /*function simplify(string) {
-    //console.log("simplifying", string);
-    return toLettersOnly(string);
-  }*/
   function toLowerLettersOnly(string) {
     let lettersOnly = "";
     for (let character of string) {
@@ -275,21 +226,12 @@ function createBlanks() {
     if (isLetter(character)) {
       //console.log("character is a letter");
       let $blank = createLetterBlank(character);
-      // $blank.attr("value", character);
-      // $blank.text("?");
-      // $blank.addClass("btn-secondary blankLetter");
       $word.append($blank);
     } else {
       //console.log("character is a punctuation");
       //if (character == " ") character = "_";
       $("#quote").append($word);
       $("#quote").append(character);
-      // if (character != " ") {
-      //   $blank.text(character);
-      //   $("#quote").append($blank);
-      // }
-      //word = document.createElement("div");
-      //$word = $(word);
       $word = $(startNewWord());
     }
   }
@@ -323,16 +265,6 @@ function isLetter(character) {
   //console.log("checking if letter");
   return character.match(/[a-z]/i);
 }
-/*function revealQuote() {
-  //console.log("revealing quote");
-  let $blankLetters = $("#quote .blankLetter");
-  //console.log("blank letters", $blankLetters);
-  for (let blankLetter of $blankLetters) {
-    revealLetter(blankLetter);
-    revealAnimation(blankLetter);
-    removeBlankStatus(blankLetter);
-  }
-}*/
 function guessedLetter(letter) {
   //incrementGuessCount();
   decrementScore();
