@@ -19,8 +19,10 @@ var isNotRoundOne = false;
  ***********************************************/
 //async function startRound() {
 async function startRound() {
-  showLoadingScreen();
+  showLoading();
+  disableStartButton();
   resetLetterSection();
+  showLetterSection();
   resetMessageSection();
   await loadQuoteSection();
   //await hideQuoteText();
@@ -28,14 +30,13 @@ async function startRound() {
   //await resetQuoteSection();
   //resetQuoteSection();
   //await getQuote();
+  hideLoading();
   hideStartButton();
   showSolveButton();
-  closeLoadingScreen();
   //createBlanks();
   setScore();
   showScore();
   //showQuoteSection();
-  showLetterSection();
   enableLetterPressGuesses();
   enableKeypressGuesses();
   isNotRoundOne = true;
@@ -43,6 +44,9 @@ async function startRound() {
   /**************************************
    * HELPER FUNCTIONS
    **************************************/
+  function disableStartButton() {
+    $("#startButton").attr("disabled", true);
+  }
   function hideStartButton() {
     $("#startButton").addClass("d-none");
   }
@@ -114,10 +118,7 @@ async function loadQuoteSection() {
   createBlanks();
 
   //$("#quoteSection").fadeTo(2000, 1);
-  $("#quoteSection").hide();
-  $("#quoteBlanks").show();
-  $("#quoteText").hide();
-  $("#quoteSection").show(2000);
+  await showQuoteSection();
 
   /**********************************************
    * HELPER FUNCTIONS
@@ -132,6 +133,16 @@ async function loadQuoteSection() {
     function promiseFunction(resolve, _reject) {
       $("#quoteSection").fadeOut(1000, resolve);
       //console.log("then");
+    }
+  }
+  function showQuoteSection() {
+    $("#quoteSection").hide();
+    $("#quoteBlanks").show();
+    $("#quoteText").hide();
+    return new Promise(animateShowQuoteSection);
+
+    function animateShowQuoteSection(resolve, _reject) {
+      $("#quoteSection").show(2000, resolve);
     }
   }
   function clearQuoteBlanks() {
@@ -180,11 +191,12 @@ async function endRound() {
   disableKeypressGuesses();
   //$(document).off("keypress");
   setHighScore();
+  hideLetterPressSection();
   await hideQuoteBlanks();
   //console.log("awaited hideQuoteBlanks");
   showQuoteText();
   showStartButton();
-  hideLetterPressSection();
+  enableStartButton();
   hideSolveButton();
   outputMessageSolved();
 
@@ -193,6 +205,9 @@ async function endRound() {
    ************************************/
   function showStartButton() {
     $("#startButton").removeClass("d-none");
+  }
+  function enableStartButton() {
+    $("#startButton").removeAttr("disabled");
   }
   function hideQuoteBlanks() {
     //console.log("hideQuoteBlanks");
@@ -343,11 +358,14 @@ function submitGuess(event) {
     return event.target.guess.value.trim();
   }
 }
-async function showLoadingScreen() {
-  console.log("loading...");
+//async function showLoading() {
+function showLoading() {
+  //console.log("loading...");
+  $("#loading").removeClass("d-none");
 }
-function closeLoadingScreen() {
-  console.log("done loading...");
+function hideLoading() {
+  //console.log("done loading...");
+  $("#loading").addClass("d-none");
 }
 /*async function getQuote() {
   let baseUrl = "https://api.quotable.io/random";
