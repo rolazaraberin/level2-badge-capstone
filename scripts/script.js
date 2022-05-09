@@ -83,7 +83,7 @@ async function loadQuoteSection() {
     return new Promise(promiseFunction);
 
     function promiseFunction(resolve, _reject) {
-      $("#quoteSection").fadeOut(1000, resolve);
+      $("#quoteSection").hide(1000, resolve);
     }
   }
   function showQuoteSection() {
