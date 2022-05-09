@@ -68,8 +68,6 @@ async function loadQuoteSection() {
     await animateHideQuoteSection();
     clearQuoteBlanks();
     clearQuoteText();
-  } else {
-    $("#quoteSection").removeClass("d-none");
   }
   await getQuote();
   createBlanks();
@@ -90,6 +88,7 @@ async function loadQuoteSection() {
   }
   function showQuoteSection() {
     $("#quoteSection").hide();
+    $("#quoteSection").removeClass("d-none");
     $("#quoteBlanks").show();
     $("#quoteText").hide();
     return new Promise(animateShowQuoteSection);
@@ -107,11 +106,11 @@ async function loadQuoteSection() {
   async function getQuote() {
     let baseUrl = "https://api.quotable.io/random";
     let queryString = "?maxLength=100";
-    //let url = baseUrl + queryString;
-    let url = "randomQuote.json";
-    //jQuery.get(url, logResults);
+    let url = baseUrl + queryString;
+    //let url = "randomQuote.json";
+    //console.log("getting quote");
     let response = await jQuery.get(url);
-    //console.log("server response", response);
+    //console.log("awaited get", response);
     quote = response.content.trim();
     author = response.author;
   }
@@ -180,8 +179,9 @@ function setHighScore() {
   let highScore = $("#highScore").text();
   if (highScore < score) $highScore.text(score);
 }
-function decrementScore() {
-  score -= scoreMultiplier;
+function decrementScore(decrementMultiplier = 1) {
+  //console.log(decrementMultiplier);
+  score -= scoreMultiplier * decrementMultiplier;
   $("#score").text(score);
 }
 function numberOfLetters(string) {
@@ -297,8 +297,9 @@ function createBlanks() {
       let $blank = createLetterBlank(character);
       $word.append($blank);
     } else {
-      $("#quoteBlanks").append(character);
-      $word = $(startNewWord());
+      //$("#quoteBlanks").append(character);
+      $word.append(character);
+      if (character != "'") $word = $(startNewWord());
     }
   }
   if (isWordUnresolved($word)) {
@@ -332,13 +333,14 @@ function isLetter(character) {
   return character.match(/[a-z]/i);
 }
 function guessedLetter(letter) {
-  decrementScore();
   disableLetter(letter);
-  let isLetterFound = revealLettersInQuote(letter);
-  if (isLetterFound) {
+  let numberOfLettersFound = revealLettersInQuote(letter);
+  if (numberOfLettersFound > 0) {
     outputMessageCorrect();
+    decrementScore(numberOfLettersFound);
   } else {
     outputMessageIncorrect();
+    decrementScore();
   }
   if (isNoMoreBlanks()) endRound();
 
@@ -405,7 +407,7 @@ function outputMessageSolved() {
   outputMessage("You guessed the quote!", "highlight", "green");
 }
 function revealLettersInQuote(letter) {
-  let isLetterFound = false;
+  let numberOfLettersFound = 0;
   let $blankLetters = $("#quoteBlanks .blankLetter");
   for (let blankLetter of $blankLetters) {
     if (letter == undefined || isMatch(blankLetter, letter)) {
@@ -413,10 +415,10 @@ function revealLettersInQuote(letter) {
       revealLetter(blankLetter);
       revealAnimation(blankLetter);
       removeBlankStatus(blankLetter);
-      isLetterFound = true;
+      numberOfLettersFound++;
     }
   }
-  return isLetterFound;
+  return numberOfLettersFound;
 
   /*********************************************
    * HELPER FUNCTIONS
