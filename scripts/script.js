@@ -25,18 +25,11 @@ async function startRound() {
   showLetterSection();
   resetMessageSection();
   await loadQuoteSection();
-  //await hideQuoteText();
-  //console.log("awaited hideQuoteSection");
-  //await resetQuoteSection();
-  //resetQuoteSection();
-  //await getQuote();
   hideLoading();
   hideStartButton();
   showSolveButton();
-  //createBlanks();
   setScore();
   showScore();
-  //showQuoteSection();
   enableLetterPressGuesses();
   enableKeypressGuesses();
   isNotRoundOne = true;
@@ -50,24 +43,6 @@ async function startRound() {
   function hideStartButton() {
     $("#startButton").addClass("d-none");
   }
-  /*function showQuoteSection() {
-    console.log("showQuoteSection");
-    $("#quoteSection").hide();
-    $("#quoteSection").removeClass("d-none");
-    //$("#quoteSection").fadeTo(2000, 1);
-    $("#quoteSection").show(2000);
-  }*/
-  /*function hideQuoteText() {
-    console.log("hideQuoteText");
-    if (isNotRoundOne) {
-      return new Promise(promiseFunction);
-    }
-
-    function promiseFunction(resolve, _reject) {
-      $("#quoteText").fadeOut(1000, resolve);
-      //console.log("then");
-    }
-  }*/
   function showLetterSection() {
     $("#letterSection").hide();
     $("#letterSection").removeClass("d-none");
@@ -80,44 +55,24 @@ async function startRound() {
     score = numberOfLetters(quote) * scoreMultiplier;
     $("#score").text(score);
   }
-  //async function resetQuoteSection() {
-  /*function resetQuoteSection() {
-    console.log("resetQuoteSection");
-    //if (isNotRoundOne) $("#quote").hide(500, clearQuote);
-    //await $("#quote").hide(500, clearQuote);
-    $("#quoteSection").hide();
-    //console.log("awaited clearQuote");
-    clearQuoteBlanks();
-  }*/
-  /*function clearQuoteBlanks() {
-    //async function clearQuote() {
-    console.log("clearQuote");
-    $("#quoteBlanks").html("");
-  }*/
   function resetLetterSection() {
     let $letters = $("#letterSection button");
     $letters.attr("disabled", false);
   }
   function resetMessageSection() {
-    //$("#messageArea").html("");
     outputMessage("", "clear");
   }
 }
 async function loadQuoteSection() {
-  //console.log("loadQuoteSection");
   if (isQuote()) {
     await animateHideQuoteSection();
-    //console.log("awaited animationHideQuoteSection");
     clearQuoteBlanks();
     clearQuoteText();
   } else {
     $("#quoteSection").removeClass("d-none");
   }
   await getQuote();
-  //console.log("awaited getQuote");
   createBlanks();
-
-  //$("#quoteSection").fadeTo(2000, 1);
   await showQuoteSection();
 
   /**********************************************
@@ -127,12 +82,10 @@ async function loadQuoteSection() {
     return $("#quoteText").html() != "" || $("#quoteBlanks").html() != "";
   }
   function animateHideQuoteSection() {
-    //console.log("hideQuoteText");
     return new Promise(promiseFunction);
 
     function promiseFunction(resolve, _reject) {
       $("#quoteSection").fadeOut(1000, resolve);
-      //console.log("then");
     }
   }
   function showQuoteSection() {
@@ -146,17 +99,10 @@ async function loadQuoteSection() {
     }
   }
   function clearQuoteBlanks() {
-    //async function clearQuote() {
-    //console.log("clearQuoteBlanks");
-    let quoteBlanks = $("#quoteBlanks").empty();
-    //console.log("emptied quoteBlanks", quoteBlanks);
-    //$("#quoteBlanks").hide();
+    $("#quoteBlanks").empty();
   }
   function clearQuoteText() {
-    //console.log("clearQuoteText");
-    let quoteText = $("#quoteText").empty();
-    //console.log("emptied quoteText", quoteText);
-    //$("#quoteText").hide();
+    $("#quoteText").empty();
   }
   async function getQuote() {
     let baseUrl = "https://api.quotable.io/random";
@@ -187,13 +133,10 @@ function showSolveButton() {
 }
 async function endRound() {
   disableLetterPressGuesses();
-  //$("#letterSection button").off("click");
   disableKeypressGuesses();
-  //$(document).off("keypress");
   setHighScore();
   hideLetterPressSection();
   await hideQuoteBlanks();
-  //console.log("awaited hideQuoteBlanks");
   showQuoteText();
   showStartButton();
   enableStartButton();
@@ -210,7 +153,6 @@ async function endRound() {
     $("#startButton").removeAttr("disabled");
   }
   function hideQuoteBlanks() {
-    //console.log("hideQuoteBlanks");
     return new Promise(hideQuoteBlanksPromise);
 
     function hideQuoteBlanksPromise(resolve, _reject) {
@@ -218,12 +160,10 @@ async function endRound() {
     }
   }
   function showQuoteText() {
-    //console.log("showQuoteText");
     $("#quoteText").html('"' + quote + '"');
     return new Promise(animateShowQuoteText);
 
     function animateShowQuoteText(resolve, _reject) {
-      //console.log("animateShowQuoteText");
       $("#quoteText").hide();
       $("#quoteText").show(2000, resolve);
     }
@@ -252,16 +192,12 @@ function numberOfLetters(string) {
   return letterCount;
 }
 function solve() {
-  //console.log("clicked solve");
   hideSolveButton();
-  //changeSolveButtonToCancel();
-  //showSubmitButton();
   showCancelButton();
   showSolveBox();
   disableKeypressGuesses();
   disableLetterPressGuesses();
   enableKeypressFocus();
-  //enableEnterKeyToSubmit();
 
   /***************************************
    * HELPER FUNCTIONS
@@ -270,7 +206,6 @@ function solve() {
     $("#cancelButton").removeClass("d-none");
   }
   function showSolveBox() {
-    //console.log("displaying solve box");
     $("#solveBox").hide();
     $("#solveBox").removeClass("d-none");
     $("#solveBox").show(500);
@@ -299,7 +234,6 @@ function cancel(event) {
     $("#cancelButton").addClass("d-none");
   }
   function hideSolveBox() {
-    //$("#solveBox").addClass("d-none");
     $("#solveBox").hide(500);
   }
   function clearGuess() {
@@ -313,20 +247,15 @@ function submitGuess(event) {
   event.preventDefault();
   event.stopPropagation();
   let guess = getGuess(event);
-  //console.log("guess", guess);
   if (!guess) {
     hideSolveSection();
     return;
   }
   if (isGuessCorrect(guess)) {
-    //console.log("guess is correct");
     hideSolveSection();
     revealLettersInQuote();
-    //revealQuote();
     endRound();
-    //outputMessageCorrect();
   } else {
-    //console.log("guess is not correct");
     decrementScore();
     outputMessageIncorrect();
   }
@@ -335,11 +264,8 @@ function submitGuess(event) {
    * HELPER FUNCTIONS
    ****************************************/
   function isGuessCorrect(guessString) {
-    //console.log("checking guess");
     let simplifiedQuote = toLowerLettersOnly(quote);
-    //console.log("quote", simplifiedQuote);
     let simplifiedGuess = toLowerLettersOnly(guessString);
-    //console.log("guess", simplifiedGuess);
     return simplifiedGuess == simplifiedQuote;
   }
   function toLowerLettersOnly(string) {
@@ -358,44 +284,19 @@ function submitGuess(event) {
     return event.target.guess.value.trim();
   }
 }
-//async function showLoading() {
 function showLoading() {
-  //console.log("loading...");
   $("#loading").removeClass("d-none");
 }
 function hideLoading() {
-  //console.log("done loading...");
   $("#loading").addClass("d-none");
 }
-/*async function getQuote() {
-  let baseUrl = "https://api.quotable.io/random";
-  let queryString = "?maxLength=100";
-  //let url = baseUrl + queryString;
-  let url = "randomQuote.json";
-  //jQuery.get(url, logResults);
-  let response = await jQuery.get(url);
-  //console.log("server response", response);
-  quote = response.content.trim();
-  author = response.author;
-}*/
-//async function createBlanks() {
 function createBlanks() {
-  //console.log("createBlanks");
   let $word = $(startNewWord());
   for (let character of quote) {
-    //console.log(letter);
-    //let $blank = createLetterBlank(character);
     if (isLetter(character)) {
-      //console.log("character is a letter");
       let $blank = createLetterBlank(character);
-      //$blank.hide();
       $word.append($blank);
-      //await $blank.show(1000);
-      //await showBlank($blank);
     } else {
-      //console.log("character is a punctuation");
-      //if (character == " ") character = "_";
-      //$("#quote").append($word);
       $("#quoteBlanks").append(character);
       $word = $(startNewWord());
     }
@@ -416,7 +317,6 @@ function createBlanks() {
     return word;
   }
   function isWordUnresolved($wordElement) {
-    //console.log("text", $wordElement.text() == "");
     return $wordElement.text() != "";
   }
   function createLetterBlank(letter) {
@@ -429,11 +329,9 @@ function createBlanks() {
   }
 }
 function isLetter(character) {
-  //console.log("checking if letter");
   return character.match(/[a-z]/i);
 }
 function guessedLetter(letter) {
-  //incrementGuessCount();
   decrementScore();
   disableLetter(letter);
   let isLetterFound = revealLettersInQuote(letter);
@@ -441,7 +339,6 @@ function guessedLetter(letter) {
     outputMessageCorrect();
   } else {
     outputMessageIncorrect();
-    //console.log("letter not in quote");
   }
   if (isNoMoreBlanks()) endRound();
 
@@ -463,7 +360,6 @@ function pressedLetter(event) {
   guessedLetter(letter);
 }
 function pressedKey(event) {
-  //console.log("pressed", event);
   event.stopPropagation();
   let letter = event.originalEvent.key;
   guessedLetter(letter);
@@ -511,7 +407,6 @@ function outputMessageSolved() {
 function revealLettersInQuote(letter) {
   let isLetterFound = false;
   let $blankLetters = $("#quoteBlanks .blankLetter");
-  //console.log("blank letters", $blankLetters);
   for (let blankLetter of $blankLetters) {
     if (letter == undefined || isMatch(blankLetter, letter)) {
       //If letter is undefined, reveal the whole quote
@@ -540,7 +435,6 @@ function revealLettersInQuote(letter) {
     $(blankElement).removeClass("blankLetter");
   }
   function revealAnimation(blankElement) {
-    //let reveal = { backgroundColor: "rgba(0, 0, 0, 0)", color: "black" };
     let reveal = { backgroundColor: "rgba(0, 0, 0, 0)" };
     $(blankElement).animate(reveal);
   }
