@@ -1,9 +1,7 @@
-$("#startButton").click(startRound);
-$("#solveButton").click(solve);
-//$("#submitButton").click(submitGuess);
-//$("#guess").on("submit", submitGuess);
+$("#startButton").on("click", startRound);
+$("#solveButton").on("click", solve);
 $("#solveForm").on("submit", submitGuess);
-$("#cancelButton").click(cancel);
+$("#cancelButton").on("click", cancel);
 
 /************************************************
  * GLOBAL VARIABLES
@@ -14,12 +12,14 @@ var guessCount;
 var bestGuessCount;
 var score;
 var scoreMultiplier = 100;
+var isNotRoundOne = false;
 
 /************************************************
  * FUNCTIONS
  ***********************************************/
 async function startRound() {
   showLoadingScreen();
+  //await resetQuoteSection();
   resetQuoteSection();
   resetLetterSection();
   resetMessageSection();
@@ -34,6 +34,7 @@ async function startRound() {
   showLetterSection();
   enableLetterPressGuesses();
   enableKeypressGuesses();
+  isNotRoundOne = true;
 
   /**************************************
    * HELPER FUNCTIONS
@@ -42,10 +43,15 @@ async function startRound() {
     $("#startButton").addClass("d-none");
   }
   function showQuoteSection() {
+    console.log("showQuoteSection");
+    $("#quoteSection").hide();
     $("#quoteSection").removeClass("d-none");
+    $("#quoteSection").show(2000);
   }
   function showLetterSection() {
+    $("#letterSection").hide();
     $("#letterSection").removeClass("d-none");
+    $("#letterSection").fadeIn(1000);
   }
   function showScore() {
     $("#scoreSection").removeClass("d-none");
@@ -54,7 +60,15 @@ async function startRound() {
     score = numberOfLetters(quote) * scoreMultiplier;
     $("#score").text(score);
   }
+  //async function resetQuoteSection() {
   function resetQuoteSection() {
+    console.log("resetQuoteSection");
+    //if (isNotRoundOne) await $("#quote").hide(500, clearQuote);
+    $("#quoteSection").hide();
+    clearQuote();
+  }
+  function clearQuote() {
+    console.log("clearQuote");
     $("#quote").html("");
   }
   function resetLetterSection() {
@@ -87,7 +101,9 @@ function endRound() {
   disableKeypressGuesses();
   //$(document).off("keypress");
   setHighScore();
+  showQuote();
   showStartButton();
+  hideLetterPressSection();
   hideSolveButton();
   outputMessageSolved();
 
@@ -96,6 +112,16 @@ function endRound() {
    ************************************/
   function showStartButton() {
     $("#startButton").removeClass("d-none");
+  }
+  function showQuote() {
+    $("#quote").hide(1500, showQuoteAsText);
+  }
+  function showQuoteAsText() {
+    $("#quote").html('"' + quote + '"');
+    $("#quote").show(2000);
+  }
+  function hideLetterPressSection() {
+    $("#letterSection").fadeOut(1000);
   }
 }
 function hideSolveButton() {
@@ -126,6 +152,7 @@ function solve() {
   showSolveBox();
   disableKeypressGuesses();
   disableLetterPressGuesses();
+  enableKeypressFocus();
   //enableEnterKeyToSubmit();
 
   /***************************************
@@ -136,14 +163,24 @@ function solve() {
   }
   function showSolveBox() {
     //console.log("displaying solve box");
+    $("#solveBox").hide();
     $("#solveBox").removeClass("d-none");
+    $("#solveBox").show(500);
+    $("#guess").focus();
   }
+  function enableKeypressFocus() {
+    $(document).on("keypress", focusTextInput);
+  }
+}
+function focusTextInput(event) {
+  $("#guess").focus();
 }
 function cancel(event) {
   clearGuess();
   hideSolveBox();
   hideCancelButton();
   showSolveButton();
+  disableKeypressFocus();
   enableKeypressGuesses();
   enableLetterPressGuesses();
 
@@ -154,16 +191,25 @@ function cancel(event) {
     $("#cancelButton").addClass("d-none");
   }
   function hideSolveBox() {
-    $("#solveBox").addClass("d-none");
+    //$("#solveBox").addClass("d-none");
+    $("#solveBox").hide(500);
   }
   function clearGuess() {
     $("#guess").val("");
+  }
+  function disableKeypressFocus() {
+    $(document).off("keypress", focusTextInput);
   }
 }
 function submitGuess(event) {
   event.preventDefault();
   event.stopPropagation();
-  let guess = event.target.guess.value;
+  let guess = getGuess(event);
+  //console.log("guess", guess);
+  if (!guess) {
+    hideSolveSection();
+    return;
+  }
   if (isGuessCorrect(guess)) {
     //console.log("guess is correct");
     hideSolveSection();
@@ -200,6 +246,9 @@ function submitGuess(event) {
   function hideSolveSection() {
     $("#cancelButton").click();
   }
+  function getGuess(event) {
+    return event.target.guess.value.trim();
+  }
 }
 async function showLoadingScreen() {
   console.log("loading...");
@@ -215,10 +264,10 @@ async function getQuote() {
   //jQuery.get(url, logResults);
   let response = await jQuery.get(url);
   //console.log("server response", response);
-  quote = response.content;
+  quote = response.content.trim();
   author = response.author;
 }
-function createBlanks() {
+async function createBlanks() {
   let $word = $(startNewWord());
   for (let character of quote) {
     //console.log(letter);
@@ -226,11 +275,14 @@ function createBlanks() {
     if (isLetter(character)) {
       //console.log("character is a letter");
       let $blank = createLetterBlank(character);
+      //$blank.hide();
       $word.append($blank);
+      //await $blank.show(1000);
+      //await showBlank($blank);
     } else {
       //console.log("character is a punctuation");
       //if (character == " ") character = "_";
-      $("#quote").append($word);
+      //$("#quote").append($word);
       $("#quote").append(character);
       $word = $(startNewWord());
     }
@@ -239,6 +291,7 @@ function createBlanks() {
     console.log("Quote is missing final punctuation");
     $("#quote").append($word);
   }
+
   $("#author").html(author);
 
   /****************************************
@@ -246,6 +299,7 @@ function createBlanks() {
    ****************************************/
   function startNewWord() {
     let word = document.createElement("div");
+    $("#quote").append(word);
     return word;
   }
   function isWordUnresolved($wordElement) {
@@ -336,7 +390,7 @@ function outputMessageCorrect() {
   outputMessage("Good guess!", "flash", "green");
 }
 function outputMessageIncorrect() {
-  outputMessage("Guess again", "flash", "red");
+  outputMessage("Guess again...", "flash", "red");
 }
 function outputMessageSolved() {
   outputMessage("You guessed the quote!", "highlight", "green");
@@ -373,7 +427,8 @@ function revealLettersInQuote(letter) {
     $(blankElement).removeClass("blankLetter");
   }
   function revealAnimation(blankElement) {
-    let reveal = { backgroundColor: "rgba(0, 0, 0, 0)", color: "black" };
+    //let reveal = { backgroundColor: "rgba(0, 0, 0, 0)", color: "black" };
+    let reveal = { backgroundColor: "rgba(0, 0, 0, 0)" };
     $(blankElement).animate(reveal);
   }
 }
