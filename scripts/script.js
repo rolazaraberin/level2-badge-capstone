@@ -17,20 +17,24 @@ var isNotRoundOne = false;
 /************************************************
  * FUNCTIONS
  ***********************************************/
+//async function startRound() {
 async function startRound() {
   showLoadingScreen();
-  //await resetQuoteSection();
-  resetQuoteSection();
   resetLetterSection();
   resetMessageSection();
-  await getQuote();
+  await loadQuoteSection();
+  //await hideQuoteText();
+  //console.log("awaited hideQuoteSection");
+  //await resetQuoteSection();
+  //resetQuoteSection();
+  //await getQuote();
   hideStartButton();
   showSolveButton();
   closeLoadingScreen();
-  createBlanks();
+  //createBlanks();
   setScore();
   showScore();
-  showQuoteSection();
+  //showQuoteSection();
   showLetterSection();
   enableLetterPressGuesses();
   enableKeypressGuesses();
@@ -42,16 +46,28 @@ async function startRound() {
   function hideStartButton() {
     $("#startButton").addClass("d-none");
   }
-  function showQuoteSection() {
+  /*function showQuoteSection() {
     console.log("showQuoteSection");
     $("#quoteSection").hide();
     $("#quoteSection").removeClass("d-none");
+    //$("#quoteSection").fadeTo(2000, 1);
     $("#quoteSection").show(2000);
-  }
+  }*/
+  /*function hideQuoteText() {
+    console.log("hideQuoteText");
+    if (isNotRoundOne) {
+      return new Promise(promiseFunction);
+    }
+
+    function promiseFunction(resolve, _reject) {
+      $("#quoteText").fadeOut(1000, resolve);
+      //console.log("then");
+    }
+  }*/
   function showLetterSection() {
     $("#letterSection").hide();
     $("#letterSection").removeClass("d-none");
-    $("#letterSection").fadeIn(1000);
+    $("#letterSection").show(1000);
   }
   function showScore() {
     $("#scoreSection").removeClass("d-none");
@@ -61,16 +77,19 @@ async function startRound() {
     $("#score").text(score);
   }
   //async function resetQuoteSection() {
-  function resetQuoteSection() {
+  /*function resetQuoteSection() {
     console.log("resetQuoteSection");
-    //if (isNotRoundOne) await $("#quote").hide(500, clearQuote);
+    //if (isNotRoundOne) $("#quote").hide(500, clearQuote);
+    //await $("#quote").hide(500, clearQuote);
     $("#quoteSection").hide();
-    clearQuote();
-  }
-  function clearQuote() {
+    //console.log("awaited clearQuote");
+    clearQuoteBlanks();
+  }*/
+  /*function clearQuoteBlanks() {
+    //async function clearQuote() {
     console.log("clearQuote");
-    $("#quote").html("");
-  }
+    $("#quoteBlanks").html("");
+  }*/
   function resetLetterSection() {
     let $letters = $("#letterSection button");
     $letters.attr("disabled", false);
@@ -78,6 +97,66 @@ async function startRound() {
   function resetMessageSection() {
     //$("#messageArea").html("");
     outputMessage("", "clear");
+  }
+}
+async function loadQuoteSection() {
+  //console.log("loadQuoteSection");
+  if (isQuote()) {
+    await animateHideQuoteSection();
+    //console.log("awaited animationHideQuoteSection");
+    clearQuoteBlanks();
+    clearQuoteText();
+  } else {
+    $("#quoteSection").removeClass("d-none");
+  }
+  await getQuote();
+  //console.log("awaited getQuote");
+  createBlanks();
+
+  //$("#quoteSection").fadeTo(2000, 1);
+  $("#quoteSection").hide();
+  $("#quoteBlanks").show();
+  $("#quoteText").hide();
+  $("#quoteSection").show(2000);
+
+  /**********************************************
+   * HELPER FUNCTIONS
+   **********************************************/
+  function isQuote() {
+    return $("#quoteText").html() != "" || $("#quoteBlanks").html() != "";
+  }
+  function animateHideQuoteSection() {
+    //console.log("hideQuoteText");
+    return new Promise(promiseFunction);
+
+    function promiseFunction(resolve, _reject) {
+      $("#quoteSection").fadeOut(1000, resolve);
+      //console.log("then");
+    }
+  }
+  function clearQuoteBlanks() {
+    //async function clearQuote() {
+    //console.log("clearQuoteBlanks");
+    let quoteBlanks = $("#quoteBlanks").empty();
+    //console.log("emptied quoteBlanks", quoteBlanks);
+    //$("#quoteBlanks").hide();
+  }
+  function clearQuoteText() {
+    //console.log("clearQuoteText");
+    let quoteText = $("#quoteText").empty();
+    //console.log("emptied quoteText", quoteText);
+    //$("#quoteText").hide();
+  }
+  async function getQuote() {
+    let baseUrl = "https://api.quotable.io/random";
+    let queryString = "?maxLength=100";
+    //let url = baseUrl + queryString;
+    let url = "randomQuote.json";
+    //jQuery.get(url, logResults);
+    let response = await jQuery.get(url);
+    //console.log("server response", response);
+    quote = response.content.trim();
+    author = response.author;
   }
 }
 function enableLetterPressGuesses() {
@@ -95,13 +174,15 @@ function disableKeypressGuesses() {
 function showSolveButton() {
   $("#solveButton").removeClass("d-none");
 }
-function endRound() {
+async function endRound() {
   disableLetterPressGuesses();
   //$("#letterSection button").off("click");
   disableKeypressGuesses();
   //$(document).off("keypress");
   setHighScore();
-  showQuote();
+  await hideQuoteBlanks();
+  //console.log("awaited hideQuoteBlanks");
+  showQuoteText();
   showStartButton();
   hideLetterPressSection();
   hideSolveButton();
@@ -113,15 +194,27 @@ function endRound() {
   function showStartButton() {
     $("#startButton").removeClass("d-none");
   }
-  function showQuote() {
-    $("#quote").hide(1500, showQuoteAsText);
+  function hideQuoteBlanks() {
+    //console.log("hideQuoteBlanks");
+    return new Promise(hideQuoteBlanksPromise);
+
+    function hideQuoteBlanksPromise(resolve, _reject) {
+      $("#quoteBlanks").hide(1500, resolve);
+    }
   }
-  function showQuoteAsText() {
-    $("#quote").html('"' + quote + '"');
-    $("#quote").show(2000);
+  function showQuoteText() {
+    //console.log("showQuoteText");
+    $("#quoteText").html('"' + quote + '"');
+    return new Promise(animateShowQuoteText);
+
+    function animateShowQuoteText(resolve, _reject) {
+      //console.log("animateShowQuoteText");
+      $("#quoteText").hide();
+      $("#quoteText").show(2000, resolve);
+    }
   }
   function hideLetterPressSection() {
-    $("#letterSection").fadeOut(1000);
+    $("#letterSection").hide(1000);
   }
 }
 function hideSolveButton() {
@@ -256,7 +349,7 @@ async function showLoadingScreen() {
 function closeLoadingScreen() {
   console.log("done loading...");
 }
-async function getQuote() {
+/*async function getQuote() {
   let baseUrl = "https://api.quotable.io/random";
   let queryString = "?maxLength=100";
   //let url = baseUrl + queryString;
@@ -266,8 +359,10 @@ async function getQuote() {
   //console.log("server response", response);
   quote = response.content.trim();
   author = response.author;
-}
-async function createBlanks() {
+}*/
+//async function createBlanks() {
+function createBlanks() {
+  //console.log("createBlanks");
   let $word = $(startNewWord());
   for (let character of quote) {
     //console.log(letter);
@@ -283,13 +378,13 @@ async function createBlanks() {
       //console.log("character is a punctuation");
       //if (character == " ") character = "_";
       //$("#quote").append($word);
-      $("#quote").append(character);
+      $("#quoteBlanks").append(character);
       $word = $(startNewWord());
     }
   }
   if (isWordUnresolved($word)) {
     console.log("Quote is missing final punctuation");
-    $("#quote").append($word);
+    $("#quoteBlanks").append($word);
   }
 
   $("#author").html(author);
@@ -299,7 +394,7 @@ async function createBlanks() {
    ****************************************/
   function startNewWord() {
     let word = document.createElement("div");
-    $("#quote").append(word);
+    $("#quoteBlanks").append(word);
     return word;
   }
   function isWordUnresolved($wordElement) {
@@ -397,7 +492,7 @@ function outputMessageSolved() {
 }
 function revealLettersInQuote(letter) {
   let isLetterFound = false;
-  let $blankLetters = $("#quote .blankLetter");
+  let $blankLetters = $("#quoteBlanks .blankLetter");
   //console.log("blank letters", $blankLetters);
   for (let blankLetter of $blankLetters) {
     if (letter == undefined || isMatch(blankLetter, letter)) {
