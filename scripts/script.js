@@ -2,6 +2,7 @@ $("#startButton").on("click", startRound);
 $("#solveButton").on("click", solve);
 $("#solveForm").on("submit", submitGuess);
 $("#cancelButton").on("click", cancel);
+$(document).on("keypress", pressEnterToStart);
 
 /************************************************
  * GLOBAL VARIABLES
@@ -17,9 +18,14 @@ var isNotRoundOne = false;
 /************************************************
  * FUNCTIONS
  ***********************************************/
-//async function startRound() {
+function pressEnterToStart(event) {
+  event.stopPropagation();
+  let key = event.originalEvent.key;
+  if (key == "Enter") startRound();
+}
 async function startRound() {
   hideStartButton();
+  disablePressEnterToStart();
   showLoading();
   resetLetterSection();
   showLetterSection();
@@ -57,6 +63,9 @@ async function startRound() {
   }
   function resetMessageSection() {
     outputMessage("", "clear");
+  }
+  function disablePressEnterToStart() {
+    $(document).off("keypress", pressEnterToStart);
   }
 }
 async function loadQuoteSection() {
@@ -134,7 +143,7 @@ async function endRound() {
   await hideQuoteBlanks();
   showQuoteText();
   showStartButton();
-  enableStartButton();
+  //enableStartButton();
   hideSolveButton();
   outputMessageSolved();
 
@@ -143,10 +152,14 @@ async function endRound() {
    ************************************/
   function showStartButton() {
     $("#startButton").removeClass("d-none");
+    enablePressEnterToStart();
   }
-  function enableStartButton() {
+  function enablePressEnterToStart() {
+    $(document).on("keypress", pressEnterToStart);
+  }
+  /*function enableStartButton() {
     $("#startButton").removeAttr("disabled");
-  }
+  }*/
   function hideQuoteBlanks() {
     return new Promise(hideQuoteBlanksPromise);
 
