@@ -19,14 +19,13 @@ var isNotRoundOne = false;
  ***********************************************/
 //async function startRound() {
 async function startRound() {
+  hideStartButton();
   showLoading();
-  disableStartButton();
   resetLetterSection();
   showLetterSection();
   resetMessageSection();
   await loadQuoteSection();
   hideLoading();
-  hideStartButton();
   showSolveButton();
   setScore();
   showScore();
@@ -37,9 +36,6 @@ async function startRound() {
   /**************************************
    * HELPER FUNCTIONS
    **************************************/
-  function disableStartButton() {
-    $("#startButton").attr("disabled", true);
-  }
   function hideStartButton() {
     $("#startButton").addClass("d-none");
   }

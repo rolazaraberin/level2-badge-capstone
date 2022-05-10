@@ -32,13 +32,19 @@
     <main class="row p-2">
       <section class="row mb-2">
         <button id="startButton" class="btn btn-primary bg-gradient col-2">
+          Start
+        </button>
+        <button
+          id="loading"
+          class="btn btn-primary bg-gradient col-2 d-none"
+          disabled
+        >
           <span
-            id="loading"
-            class="spinner-border spinner-border-sm d-none"
+            class="spinner-border spinner-border-sm"
             role="status"
             aria-hidden="true"
           ></span
-          >Start
+          >Loading
         </button>
         <button
           id="solveButton"
