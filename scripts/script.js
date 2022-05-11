@@ -113,9 +113,7 @@ async function loadQuoteSection() {
     let queryString = "?maxLength=100";
     let url = baseUrl + queryString;
     //let url = "randomQuote.json";
-    //console.log("getting quote");
     let response = await jQuery.get(url);
-    //console.log("awaited get", response);
     quote = response.content.trim();
     author = response.author;
   }
@@ -143,7 +141,6 @@ async function endRound() {
   await hideQuoteBlanks();
   showQuoteText();
   showStartButton();
-  //enableStartButton();
   hideSolveButton();
   outputMessageSolved();
 
@@ -157,9 +154,6 @@ async function endRound() {
   function enablePressEnterToStart() {
     $(document).on("keypress", pressEnterToStart);
   }
-  /*function enableStartButton() {
-    $("#startButton").removeAttr("disabled");
-  }*/
   function hideQuoteBlanks() {
     return new Promise(hideQuoteBlanksPromise);
 
@@ -189,7 +183,6 @@ function setHighScore() {
   if (highScore < score) $highScore.text(score);
 }
 function decrementScore(decrementMultiplier = 1) {
-  //console.log(decrementMultiplier);
   score -= scoreMultiplier * decrementMultiplier;
   $("#score").text(score);
 }
@@ -306,7 +299,6 @@ function createBlanks() {
       let $blank = createLetterBlank(character);
       $word.append($blank);
     } else {
-      //$("#quoteBlanks").append(character);
       $word.append(character);
       if (character != "'") $word = $(startNewWord());
     }
