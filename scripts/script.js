@@ -371,8 +371,12 @@ function pressedLetter(event) {
 }
 function pressedKey(event) {
   event.stopPropagation();
-  let letter = event.originalEvent.key;
-  guessedLetter(letter);
+  let key = event.originalEvent.key;
+  if (key == "Enter") {
+    $("#solveButton").click();
+  } else {
+    guessedLetter(key);
+  }
 }
 function outputMessage(message, effect, color) {
   let $messageArea = $("#messageArea");
