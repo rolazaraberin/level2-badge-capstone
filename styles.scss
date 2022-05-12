@@ -4,6 +4,9 @@
   }
 }
 #quoteSection {
+  #quoteBlanks * {
+    cursor: default;
+  }
   .btn {
     margin: 0.1rem;
     min-width: 40px;

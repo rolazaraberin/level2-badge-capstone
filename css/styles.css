@@ -1,1 +1,1 @@
-#letterSection .btn{margin:.1rem}#quoteSection .btn{margin:.1rem;min-width:40px;min-height:33px}#author{margin-top:0;margin-bottom:0}#messageArea{height:2rem}html,body{min-height:100vh}
+#letterSection .btn{margin:.1rem}#quoteSection #quoteBlanks *{cursor:default}#quoteSection .btn{margin:.1rem;min-width:40px;min-height:33px}#author{margin-top:0;margin-bottom:0}#messageArea{height:2rem}html,body{min-height:100vh}
