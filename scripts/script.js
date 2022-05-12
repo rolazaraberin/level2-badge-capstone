@@ -111,8 +111,8 @@ async function loadQuoteSection() {
   async function getQuote() {
     let baseUrl = "https://api.quotable.io/random";
     let queryString = "?maxLength=100";
-    let url = baseUrl + queryString;
-    //let url = "randomQuote.json";
+    //let url = baseUrl + queryString;
+    let url = "randomQuote.json";
     let response = await jQuery.get(url);
     quote = response.content.trim();
     author = response.author;
@@ -167,6 +167,7 @@ async function endRound() {
 
     function animateShowQuoteText(resolve, _reject) {
       $("#quoteText").hide();
+      $("#quoteText").removeClass("d-none");
       $("#quoteText").show(2000, resolve);
     }
   }
@@ -304,9 +305,10 @@ function createBlanks() {
     }
   }
   if (isWordUnresolved($word)) {
-    console.log("Quote is missing final punctuation");
+    //console.log("Quote is missing final punctuation");
     $("#quoteBlanks").append($word);
   }
+  if (isEmptyElement($word)) $word.remove();
 
   $("#author").html(author);
 
@@ -315,6 +317,7 @@ function createBlanks() {
    ****************************************/
   function startNewWord() {
     let word = document.createElement("div");
+    $(word).addClass("col-auto");
     $("#quoteBlanks").append(word);
     return word;
   }
@@ -324,10 +327,14 @@ function createBlanks() {
   function createLetterBlank(letter) {
     let blank = document.createElement("div");
     let $blank = $(blank);
-    $blank.addClass("col btn btn-secondary blankLetter");
+    //$blank.addClass("col btn btn-secondary blankLetter");
+    $blank.addClass("btn btn-secondary blankLetter");
     $blank.attr("value", letter);
     $blank.text("?");
     return $blank;
+  }
+  function isEmptyElement($element) {
+    return $element.text() == "";
   }
 }
 function isLetter(character) {

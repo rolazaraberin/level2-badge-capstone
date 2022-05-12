@@ -13,8 +13,11 @@
 }*/
 
 .grid {
+  /*NOTE: Bootstrap has a grid class, but it's disabled by default*/
   display: grid;
-  grid-auto-flow: column;
+}
+.fit-content {
+  width: fit-content;
 }
 .title {
   margin-bottom: 0;
@@ -22,7 +25,8 @@
 .subtitle {
   margin-top: 0;
 }
-/*Bootstrap already sets this
+
+/*Bootstrap already sets something like this
 html {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }*/
