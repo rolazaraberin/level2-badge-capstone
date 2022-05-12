@@ -112,8 +112,8 @@ async function loadQuoteSection() {
   async function getQuote() {
     let baseUrl = "https://api.quotable.io/random";
     let queryString = "?maxLength=100";
-    //let url = baseUrl + queryString;
-    let url = "randomQuote.json";
+    let url = baseUrl + queryString;
+    //let url = "randomQuote.json";
     let response = await jQuery.get(url);
     quote = response.content.trim();
     author = response.author;
