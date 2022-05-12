@@ -12,8 +12,9 @@ var author;
 var guessCount;
 var bestGuessCount;
 var score;
-var scoreMultiplier = 100;
 var isNotRoundOne = false;
+const scoreMultiplier = 100;
+const clear = "rgba(0,0,0,0)";
 
 /************************************************
  * FUNCTIONS
@@ -186,6 +187,16 @@ function setHighScore() {
 function decrementScore(decrementMultiplier = 1) {
   score -= scoreMultiplier * decrementMultiplier;
   $("#score").text(score);
+  highlightScoreDecrement();
+
+  /*************************************
+   * HELPER FUNCTIONS
+   *************************************/
+  function highlightScoreDecrement() {
+    let originalColor = $("#scoreSection").css("color");
+    $("#score").animate({ color: "red" });
+    $("#score").animate({ color: originalColor });
+  }
 }
 function numberOfLetters(string) {
   let letterCount = 0;
@@ -255,9 +266,9 @@ function submitGuess(event) {
     return;
   }
   if (isGuessCorrect(guess)) {
+    endRound();
     hideSolveSection();
     revealLettersInQuote();
-    endRound();
   } else {
     decrementScore();
     outputMessageIncorrect();
@@ -405,7 +416,6 @@ function outputMessage(message, effect, color) {
     $messageArea.animate({ "background-color": colorString });
   }
   function clearMessage() {
-    let clear = "rgba(0,0,0,0)";
     $messageArea.css({ "background-color": clear });
   }
 }
@@ -416,7 +426,7 @@ function outputMessageIncorrect() {
   outputMessage("Guess again...", "flash", "red");
 }
 function outputMessageSolved() {
-  outputMessage("You guessed the quote!", "highlight", "green");
+  outputMessage("You guessed the quote!", "flash", "green");
 }
 function revealLettersInQuote(letter) {
   let numberOfLettersFound = 0;

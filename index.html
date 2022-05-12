@@ -24,14 +24,14 @@
           <li class="">The less you guess, the higher the score</li>
           <li class="">Solve the quote before all the blanks are filled</li>
         </ol>
-        <p class="text-warning text-center">
+        <!--<p class="text-warning text-center">
           Your score decreases with each guess!
-        </p>
+        </p>-->
       </section>
     </header>
 
     <!--<main class="row p-2 px-m-5 px-lg-5">-->
-    <main class="row p-2 px-m-4 px-lg-4">
+    <main class="row p-2 px-md-3 px-lg-4">
       <section id="buttonSection" class="col-12 mb-2">
         <div class="row justify-content-center">
           <button id="startButton" class="btn btn-primary bg-gradient col-2">
@@ -39,7 +39,7 @@
           </button>
           <button
             id="loading"
-            class="btn btn-primary bg-gradient col-3 d-none"
+            class="btn btn-primary bg-gradient col-3 col-md-2 col-lg-2 d-none"
             disabled
           >
             <span
@@ -83,10 +83,10 @@
       >-->
       <section
         id="quoteSection"
-        class="col-12 d-none justify-content-center px-m-4 px-lg-4"
+        class="col-12 d-none justify-content-center px-md-3 px-lg-4"
       >
         <!--<div class="px-m-5 px-lg-5 mx-m-5 mx-lg-5">-->
-        <div class="px-m-4 mx-m-4 px-lg-4 mx-lg-4">
+        <div class="px-md-3 mx-md-3 px-lg-4 mx-lg-4">
           <blockquote class="blockquote mx-auto grid fit-content">
             <div id="quoteBlanks" class="row"></div>
             <div id="quoteText"></div>
@@ -140,6 +140,9 @@
       <hr class="col-12" />
       <div class="col">Score: <span id="score">0</span></div>
       <div class="col">Your high score: <span id="highScore">0</span></div>
+      <p class="text-warning text-center col-12">
+        Your score decreases with each guess!
+      </p>
     </footer>
   </body>
 </html>
